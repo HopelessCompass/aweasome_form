@@ -7,26 +7,28 @@
     <input type="date" id="input-date">
   </p>
   <button v-on:click="validate()">Забронировать мероприятие</button>
-  <ul id="example-1">
-    <ul id="v-for-object" class="demo">
-  <li v-for="value in meetings">
-    {{ value.mail, value.date }}
+  <ul>
+    <li v-for="value in meetings">
+     <p>{{ value }}</p>
   </li>
 </ul>
-</ul>
-  <div>
-
-  </div>
 </template>
 
 <script setup lang="ts">
 let mail: string = '';
 let password: string = '';
-let meetings: Array<object> = [{}];
+let meetings: Array<any> = [];
 
 let flag_mail: boolean = false;
 let flag_password: boolean = false;
 let flag_date: boolean = false;
+
+function add(user: string, date: Date): void {
+   meetings.push({
+    obj_user: user,
+    obj_date: date
+   });
+  };
 
 function validate(): void {
   console.log('It works');
@@ -39,33 +41,30 @@ function validate(): void {
   }
 
   if (password.length < 6) {
-    console.log('Пароль некорректен')
-    alert('Пароль должен содержать от 6 символов')
+    console.log('Пароль некорректен');
+    alert('Пароль должен содержать от 6 символов');
   } else {
     flag_password = true;
   }
-  // Получаем текущую дату
-  const currentDate :Date = new Date();
-  // Получаем значение даты из input
-  const inputDate :Date = new Date(document.getElementById("input-date").value);
-  
-  // Сравниваем даты
+  let currentDate :Date = new Date();
+  let inputDate :Date = new Date(document.getElementById("input-date").value);
+
   if (inputDate > currentDate) {
+    flag_date = true;
     console.log("Дата в будущем!");
+    add(mail, inputDate);
   } else if (inputDate < currentDate) {
     console.log("Дата в прошлом!");
+    flag_date = false;
   } else {
     flag_date = true;
-    console.log("Дата совпадает с текущей датой!")
+    console.log("Дата совпадает с текущей датой!");
   }
-  add(mail, inputDate);
+  if (flag_mail == true && flag_date == true && flag_password == true) {
+    add(mail, inputDate);
+    console.log(meetings)
+  }
 };
-
-function add(user: string, date: Date) {
-  meetings.push({
-    obj_user: user,
-    obj_date: date
-  });
 </script>
 
 <style>
