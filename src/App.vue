@@ -9,7 +9,7 @@
   <button v-on:click="validate()">Забронировать мероприятие</button>
   <ul>
     <li v-for="value in meetings">
-     <p>{{ value }}</p>
+     <p>{{ value.obj_user }} : {{ value.obj_date }}</p>
   </li>
 </ul>
 </template>
@@ -31,8 +31,6 @@ function add(user: string, date: Date): void {
   };
 
 function validate(): void {
-  console.log('It works');
-
   if (mail.indexOf('@') == -1) {
     console.log('Почта некорректна');
     alert('Почта некорректна');
@@ -46,23 +44,22 @@ function validate(): void {
   } else {
     flag_password = true;
   }
+
   let currentDate :Date = new Date();
   let inputDate :Date = new Date(document.getElementById("input-date").value);
 
-  if (inputDate > currentDate) {
-    flag_date = true;
-    console.log("Дата в будущем!");
-    add(mail, inputDate);
-  } else if (inputDate < currentDate) {
-    console.log("Дата в прошлом!");
-    flag_date = false;
-  } else {
-    flag_date = true;
-    console.log("Дата совпадает с текущей датой!");
-  }
-  if (flag_mail == true && flag_date == true && flag_password == true) {
-    add(mail, inputDate);
-    console.log(meetings)
+  if (inputDate != null) {
+    if (inputDate > currentDate) {
+      flag_date = true;
+    } else if (inputDate < currentDate) {
+      flag_date = false;
+    } else {
+      flag_date = true;
+    }
+    if (flag_mail == true && flag_date == true && flag_password == true) {
+      add(mail, inputDate);
+      console.log(meetings)
+    }
   }
 };
 </script>
